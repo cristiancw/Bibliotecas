@@ -1,4 +1,4 @@
 Bibliotecas
 ===========
 
-ContÃ©m libs utilizada em projetos
+Contém libs utilizada em projetos

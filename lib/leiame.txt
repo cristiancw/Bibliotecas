@@ -1,0 +1,42 @@
+Hudson/Jenkins
+==============
+
+Incluir bibliotecas:
+--------------------
+
+Quando for executar os demais projetos que dependem desse projeto de libs, deve ser alterado o caminho gerado pelo "Ant buildfiles" padrão do eclipse:
+Gerado:
+    <property name="Bibliotecas.location" value="../Bibliotecas"/>
+Deve ser alterado:
+	<property name="Bibliotecas.location" value="../../Bibliotecas/workspace"/>
+
+A estrutura gerada nos jobs do hudson/jenkins vai ser assim:
+root							- onde esta instalado
+	jobs						
+		Bibliotecas				- job com o nome do projeto Bibliotecas
+			builds				- resultado dos builds realizados do projeto Bibliotecas
+			workspace           - conteudo do checkout do repositório do github
+				.git
+				javadocs
+				lib
+		ProjetoX				- job com o nome do seu projeto, no caso ProjetoX
+			builds				- resultado dos builds realizados do projeto Bibliotecas
+			workspace			- conteudo do checkout do repositório do github
+				.git
+				bin				- bytecodes
+				src				- fontes do projeto baixado
+				srcTest         - fontes de teste do projeto baixado
+				...
+
+
+Configurar o findbugs:
+----------------------
+No final do build.xml incluir as linhas a seguir:
+
+	<taskdef name="findbugs" classpath="${Bibliotecas.location}/lib/findbugs/findbugs-ant.jar" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+	<target name="findbugs">
+		<findbugs home="${findbugs.home}" output="xml:withMessages" outputFile="findbugs.xml">
+			<sourcePath path="${basedir}/src" />
+			<class location="${basedir}/bin" />
+		</findbugs>
+	</target>
