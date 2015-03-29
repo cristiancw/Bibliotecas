@@ -1,8 +1,27 @@
 Hudson/Jenkins
 ==============
 
-Incluir bibliotecas:
---------------------
+Depois de exportar o AntBuildfiles do projeto deve editar no arquivo gerado os seguintes itens:
+
+01 - trocar a linha gerada:
+	<property name="Bibliotecas.location" value="../Bibliotecas"/>
+por:
+	<property name="Bibliotecas.location" value="../../Bibliotecas/workspace" />
+
+02 - incluir no final do arquivo:
+
+	<taskdef name="findbugs" classpath="${Bibliotecas.location}/lib/findbugs/findbugs-ant.jar" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+	<target name="findbugs">
+		<findbugs home="${findbugs.home}" output="xml:withMessages" outputFile="findbugs.xml">
+			<sourcePath path="${basedir}/src" />
+			<class location="${basedir}/bin" />
+		</findbugs>
+	</target>
+
+
+
+Detalhes para incluir bibliotecas:
+----------------------------------
 
 Quando for executar os demais projetos que dependem desse projeto de libs, deve ser alterado o caminho gerado pelo "Ant buildfiles" padrão do eclipse:
 Gerado:
@@ -40,3 +59,7 @@ No final do build.xml incluir as linhas a seguir:
 			<class location="${basedir}/bin" />
 		</findbugs>
 	</target>
+
+Quando for definido o task para executar o findbugs via Ant, deve incluir nas opções avançadas a propriedade:
+	findbugs.home=C:/Temp/DevTools/findbugs-3.0.0
+	ps.: o caminho é o caminho da instalação do findbugs 
